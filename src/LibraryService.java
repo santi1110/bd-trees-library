@@ -1,3 +1,4 @@
+import model.Book;
 import org.apache.commons.lang3.NotImplementedException;
 import treestructure.BookNode;
 
@@ -34,9 +35,25 @@ public class LibraryService {
      *         false otherwise
      */
     public boolean isBookInLibraryByIsbn(String isbn) {
+        if (isbn == null  || isbn.isEmpty()){
+            return false;
+        }
+        BookNode current = books;
+
+        while (current != null){
+            int comparison = isbn.compareTo(current.getBook().getIsbn());
+
+            if (comparison == 0){
+                return true;
+            } else if (comparison < 0){
+                current = current.getLeft();
+            } else {
+                current = current.getRight();
+            }
+        }
         // PARTICIPANTS: IMPLEMENT YOUR BINARY SEARCH HERE
 
-        throw new NotImplementedException("isBookInLibraryByIsbn is not yet implemented!");
+        return false;
     }
 
 
@@ -50,8 +67,22 @@ public class LibraryService {
      *         false otherwise
      */
     public boolean isBookInLibraryByTitleAndAuthor(String title, String author) {
+
+        if (title == null || title.isEmpty() || author == null || author.isEmpty()) {
+            return false;
+        }
         // PARTICIPANTS: IMPLEMENT YOUR DEPTH FIRST SEARCH HERE
 
-        throw new NotImplementedException("isBookInLibraryByTitleAndAuthor is not yet implemented!");
+  return depthFirstSearch(books, title, author);
+    }
+    private boolean depthFirstSearch(BookNode node, String title, String author){
+        if (node == null){
+            return false;
+        }
+        Book book = node.getBook();
+        if (book.getTitle().equals(title) && book.getAuthor().equals(author)){
+            return true;
+        }
+        return depthFirstSearch(node.getLeft(), title, author) || depthFirstSearch(node.getRight(), title, author);
     }
 }
